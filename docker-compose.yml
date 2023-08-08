@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:latest
+    image: postgres
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser

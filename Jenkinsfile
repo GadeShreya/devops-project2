@@ -1,27 +1,22 @@
-  pipeline {
+pipeline {
     agent any
 
     stages {
         stage('Build') {
             steps {
-                sh 'docker-compose build'
+                script {
+                    docker.build('my-django-app')
+                }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
+                script {
+                    docker.withRegistry('', 'docker-hub-credentials') {
+                        docker.image('my-django-app').push('latest')
+                    }
+                }
             }
-        }
-        stage('Test') {
-            steps {
-                // You can add tests here, e.g., using Selenium or other testing frameworks
-            }
-        }
-    }
-
-    post {
-        always {
-            sh 'docker-compose down'
         }
     }
 }
