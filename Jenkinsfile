@@ -2,21 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker build -t my-django-app .'
+                script {
+                    docker.image('python:3.8').pull()
+                    docker.build('my-django-app')
+                }
             }
         }
 
-        stage('Test') {
+        stage('Deploy with Docker Compose') {
             steps {
-                sh 'docker-compose run web python manage.py test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh 'docker-compose up -d'
+                bat 'docker-compose up -d'
             }
         }
     }
