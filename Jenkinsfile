@@ -4,19 +4,21 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                script {
-                    docker.build('my-django-app')
-                }
+                sh 'docker build -t my-django-app .'
             }
         }
+
+        stage('Test') {
+            steps {
+                sh 'docker-compose run web python manage.py test'
+            }
+        }
+
         stage('Deploy') {
             steps {
-                script {
-                    docker.withRegistry('', 'docker-hub-credentials') {
-                        docker.image('my-django-app').push('latest')
-                    }
-                }
+                sh 'docker-compose up -d'
             }
         }
     }
 }
+
