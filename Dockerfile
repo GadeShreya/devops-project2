@@ -1,19 +1,18 @@
-# Use an official Python runtime as the base image
+# Use the official Python image as the base image
 FROM python:3.8
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
+# Set environment variable to run Python in unbuffered mode
 ENV PYTHONUNBUFFERED 1
 
-# Set the working directory within the container
-WORKDIR /app
+# Set the working directory inside the container
+WORKDIR /code
 
-# Copy the requirements file into the container
-COPY requirements.txt /app/
+# Copy the requirements file to the container
+COPY requirements.txt /code/
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the project dependencies
+RUN pip install -r requirements.txt
 
-# Copy the rest of the application code into the container
-COPY . /app/
+# Copy the project files to the container
+COPY . /code/
 
