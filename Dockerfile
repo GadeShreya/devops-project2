@@ -1,21 +1,32 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8
+FROM python:3
 
-# Set environment variables
-ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    gettext
 
-# Set the working directory
+# Requirements are installed here to ensure they will be cached.
+COPY ./requirements.txt /requirements.txt
+RUN pip install --no-cache-dir --default-timeout=200 -r /requirements.txt \
+    && rm -rf /requirements.txt
+
+COPY ./entrypoint.sh /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
+COPY ./start-django.sh /start-django
+RUN sed -i 's/\r$//g' /start-django
+RUN chmod +x /start-django
+
+COPY . /app
+
+COPY config/nginx/default /etc/nginx/sites-available/default
+COPY config/nginx/nginx.conf /etc/nginx/nginx.conf
+
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app/
+EXPOSE 80/tcp 443/tcp
 
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+ENTRYPOINT ["/entrypoint"]
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
-
-# Run Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+CMD ["sh" , "/start-django"]
