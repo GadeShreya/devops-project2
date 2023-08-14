@@ -14,16 +14,22 @@ pipeline {
                 dir('devops-project2') {
                     // Execute Docker build command
                     bat 'docker build -t my-django-app:21 .'
+                    
+                    // Deploy using docker-compose
+                    bat 'docker-compose up -d'
                 }
             }
         }
+    }
 
-         post {
+    post {
         always {
             // Clean up resources, e.g., stop and remove Docker containers, clean workspace, etc.
             deleteDir()
-            bat 'docker-compose down'
+            script {
+                bat 'docker-compose down'
+            }
         }
     }
-  }
 }
+
