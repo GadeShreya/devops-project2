@@ -4,20 +4,20 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                // Checkout your repository here
                 checkout scm
             }
         }
 
         stage('Build and Deploy') {
             steps {
+                // Remove the 'dir' block if your Dockerfile and docker-compose.yml are in the root directory
                 dir('devops-project2') {
-                    // Execute Docker build command
+                    // Build the Docker image
                     bat 'docker build -t my-django-app:21 .'
-                    
-                    // Deploy using docker-compose
-                    bat 'docker-compose up -d'
                 }
+                
+                // Deploy using docker-compose
+                bat 'docker-compose up -d'
             }
         }
     }
@@ -25,8 +25,8 @@ pipeline {
     post {
         always {
             // Clean up resources, e.g., stop and remove Docker containers, clean workspace, etc.
-            deleteDir()
             script {
+                // Adjust the path to docker-compose.yml if needed
                 bat 'docker-compose down'
             }
         }
