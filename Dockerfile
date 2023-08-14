@@ -1,23 +1,20 @@
 FROM python:3.8
 
-# Install D-Bus and other dependencies
-RUN apt-get update && \
-    apt-get install -y libsystemd-dev libsystemd0
+# Install necessary system packages
+RUN apt-get update && apt-get install -y libsystemd-dev libsystemd0 libdbus-1-dev
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy your project's requirements.txt to the container
+# Copy the requirements file into the container
 COPY requirements.txt /app/
 
-# Install Python packages from requirements.txt
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your project files
+# Copy the rest of your application files
 COPY . /app/
 
-# Your other Dockerfile commands and configurations
-
-# Example: Run your application
-CMD ["python", "app.py"]
+# Specify the command to run your application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
