@@ -20,7 +20,7 @@ pipeline {
     }
 
     post {
-        always {
+        success {
             cleanWs()
             bat "docker-compose down"
         }
