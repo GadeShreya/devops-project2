@@ -1,23 +1,23 @@
 FROM python:3.8
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libsystemd-dev libsystemd0
+# Install D-Bus and other dependencies
+RUN apt-get update && \
+    apt-get install -y libsystemd-dev libsystemd0
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements file
+# Copy your project's requirements.txt to the container
 COPY requirements.txt /app/
 
-# Install Python dependencies
+# Install Python packages from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of your project files
 COPY . /app/
 
-# Expose the port your Django app runs on
-EXPOSE 8000
+# Your other Dockerfile commands and configurations
 
-# Command to run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Example: Run your application
+CMD ["python", "app.py"]
 
