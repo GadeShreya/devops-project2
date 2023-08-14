@@ -1,25 +1,14 @@
-# Use an appropriate base image that includes Python
-FROM python:3.8
+FROM python:3.9
 
-# Set the working directory inside the container
-WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y libgirepository1.0-dev libsystemd-dev
+RUN mkdir /code
+WORKDIR /code
+RUN pip install --upgrade pip
+COPY requirements.txt /code/
 
-# Copy the requirements file into the container
-COPY requirements.txt /app/
+RUN pip install -r requirements.txt
+COPY . /code/
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 8000
 
-# Copy the rest of your application files into the container
-COPY . /app/
-
-# Expose the port your Django app will run on
-EXPOSE 8080
-
-# Command to run your Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
-
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
