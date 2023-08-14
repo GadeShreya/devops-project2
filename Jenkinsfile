@@ -11,7 +11,7 @@ pipeline {
 
         stage('Build and Deploy') {
             steps {
-                dir('path/to/your/project/directory') {
+                dir('devops-project2') {
                     // Execute Docker build command
                     bat 'docker build -t my-django-app:21 .'
                 }
