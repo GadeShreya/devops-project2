@@ -1,28 +1,28 @@
 pipeline {
     agent any
-    
+
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
+                // Checkout your repository here
                 checkout scm
             }
         }
-        
+
         stage('Build and Deploy') {
             steps {
-                script {
-                    def dockerImage = docker.build("my-django-app:${env.BUILD_NUMBER}")
-                    dockerImage.push()
-                    bat "docker-compose up -d"
+                dir('path/to/your/project/directory') {
+                    // Execute Docker build command
+                    bat 'docker build -t my-django-app:21 .'
                 }
             }
         }
-    }
-    
-    post {
+
+         post {
         always {
-            cleanWs()
-            bat "docker-compose down"
+            // Clean up resources, e.g., stop and remove Docker containers, clean workspace, etc.
+            deleteDir()
+            bat 'docker-compose down'
         }
     }
 }
