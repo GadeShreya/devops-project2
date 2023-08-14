@@ -26,8 +26,8 @@ pipeline {
         always {
             // Clean up resources, e.g., stop and remove Docker containers, clean workspace, etc.
             script {
-                // Adjust the path to docker-compose.yml if needed
-                bat"' bat\'docker-compose -f devops-project2/docker/docker-compose.yml down\' "'
+               // Adjust the path to docker-compose.yml if needed
+                bat"' bat\'docker-compose -f devops-project2/docker/docker-compose.yml down\' '"
             }
         }
     }
