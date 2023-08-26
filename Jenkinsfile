@@ -4,25 +4,16 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/GadeShreya/devops-project2.git'
             }
         }
 
         stage('Build and Deploy') {
             steps {
-                script {
-                    def dockerImage = docker.build("my-django-app:${env.BUILD_NUMBER}")
-                    dockerImage.push()
-                    bat "docker-compose up -d"
-                }
+                bat 'docker-compose build'
+                bat 'docker-compose up -d'
             }
         }
     }
-
-    post {
-        always {
-            cleanWs()
-            bat "docker-compose down"
-        }
-    }
 }
+
