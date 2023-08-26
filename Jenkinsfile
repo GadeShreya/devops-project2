@@ -1,17 +1,28 @@
 pipeline {
     agent any
+
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build and Deploy') {
             steps {
                 script {
-                    def dockerTool = tool name: 'Docker', type: 'hudson.plugins.docker.tools.DockerTool'
-                    env.PATH = "${dockerTool}:${env.PATH}"
-
-                    // Now you can use docker commands in this stage
-                    bat 'docker-compose build'
+                    def dockerImage = docker.build("my-django-app:${env.BUILD_NUMBER}")
+                    dockerImage.push()
+                    bat "docker-compose up -d"
                 }
             }
         }
     }
-}
 
+    post {
+        always {
+            cleanWs()
+            bat "docker-compose down"
+        }
+    }
+}
